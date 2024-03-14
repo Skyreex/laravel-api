@@ -7,14 +7,22 @@ use App\Http\Requests\UserRequest;
 use App\Http\Resources\V1\UserCollection;
 use App\Http\Resources\V1\UserResource;
 use App\Models\User;
+use App\Filters\V1\UsersFilter;
+use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $queryItems = (new UsersFilter)->transform($request);
+        if (count($queryItems) > 0){
+         $users = User::where($queryItems)->paginate(2);
+            return new UserCollection($users->appends($request->query()));
+        }
+
         return new UserCollection(User::paginate(5));
     }
 
