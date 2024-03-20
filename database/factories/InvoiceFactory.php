@@ -2,12 +2,13 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Product>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Model>
  */
-class ProductFactory extends Factory
+class InvoiceFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -17,9 +18,8 @@ class ProductFactory extends Factory
     public function definition(): array
     {
         return [
-            'title' => $this->faker->sentence,
-            'description' => $this->faker->paragraph,
-            'price' => $this->faker->randomFloat(2, 1, 1000),
+            "user_id" => User::factory(),
+            "amount" => $this->faker->randomFloat(2, 1, 1000),
         ];
     }
 }

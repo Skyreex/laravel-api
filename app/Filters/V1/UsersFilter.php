@@ -7,19 +7,19 @@ use App\Filters\ApiFilter;
 
 class UsersFilter extends ApiFilter
 {
-    protected $allowedFilters = [
+    protected array $allowedFilters = [
         'name' => ['like'],
         'email' => ['like'],
         'createdAt' => ['gte', 'lte', 'gt', 'lt', 'eq'],
         'updatedAt' => ['gte', 'lte', 'gt', 'lt', 'eq'],
     ];
 
-    protected $columnMap = [
+    protected array $columnMap = [
         'createdAt' => 'created_at',
         'updatedAt' => 'updated_at',
     ];
 
-    protected $operatorMap = [
+    protected array $operatorMap = [
         'like' => 'like',
         'gte' => '>=',
         'lte' => '<=',
@@ -27,5 +27,4 @@ class UsersFilter extends ApiFilter
         'lt' => '<',
         'eq' => '=',
     ];
-
 }

@@ -15,6 +15,21 @@ class UserSeeder extends Seeder
     {
         User::factory()
             ->count(10)
+            ->hasInvoices(5)
+            ->create();
+
+        User::factory()
+            ->count(50)
+            ->hasInvoices(8)
+            ->create();
+
+        User::factory()
+            ->count(200)
+            ->hasInvoices(1)
+            ->create();
+
+        User::factory()
+            ->count(60)
             ->create();
     }
 }

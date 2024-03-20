@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
+use App\Http\Requests\V1\StoreUserRequest;
+use App\Http\Requests\V1\UpdateUserRequest;
 use App\Http\Resources\V1\UserCollection;
 use App\Http\Resources\V1\UserResource;
 use App\Models\User;
@@ -15,38 +17,44 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request): UserCollection
     {
         $queryItems = (new UsersFilter)->transform($request);
-        if (count($queryItems) > 0){
-         $users = User::where($queryItems)->paginate(2);
-            return new UserCollection($users->appends($request->query()));
-        }
 
-        return new UserCollection(User::paginate(5));
+        $includeInvoices = $request->query('includeInvoices');
+
+        $users = User::where($queryItems)->paginate(10);
+
+        if ($includeInvoices) $users->load('invoices');
+
+        return new UserCollection($users->appends($request->query()));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(UserRequest $request)
+    public function store(StoreUserRequest $request): \Illuminate\Http\JsonResponse
     {
-        User::create($request->all(), ['password' => bcrypt($request->password)]);
+        User::create($request->all());
         return response()->json(['message' => 'User created successfully'], 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(User $user)
+    public function show(User $user): UserResource
     {
+        $includeInvoices = request()->query('includeInvoices');
+
+        if ($includeInvoices) $user->loadMissing('invoices');
+
         return new UserResource($user);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UserRequest $request, User $user)
+    public function update(UpdateUserRequest $request, User $user): \Illuminate\Http\JsonResponse
     {
         $user->update($request->all());
         return response()->json(['message' => 'User updated successfully'], 200);
@@ -55,7 +63,7 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user)
+    public function destroy(User $user): \Illuminate\Http\JsonResponse
     {
         $user->delete();
         return response()->json(['message' => 'User deleted successfully'], 200);

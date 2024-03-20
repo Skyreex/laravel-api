@@ -6,13 +6,13 @@ use Illuminate\Http\Request;
 
 class ApiFilter
 {
-    protected $allowedFilters = [];
+    protected array $allowedFilters = [];
 
-    protected $columnMap = [];
+    protected array $columnMap = [];
 
-    protected $operatorMap = [];
+    protected array $operatorMap = [];
 
-    public function transform(Request $request)
+    public function transform(Request $request): array
     {
         $eloquentQuery = [];
 
