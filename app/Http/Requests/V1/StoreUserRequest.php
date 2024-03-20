@@ -11,7 +11,8 @@ class StoreUserRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        $user = auth()->user();
+        return $user != null && $user->tokenCan('update');
     }
 
     /**
